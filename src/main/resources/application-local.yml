@@ -1,0 +1,12 @@
+spring:
+  profiles: local
+
+server:
+  port: 8002
+logging:
+  level:
+    root: info
+    web: info
+    sql: error
+    org.hibernate: error
+    org.springframework: error
