@@ -1,0 +1,21 @@
+# Use root/example as user/password credentials
+version: '4.0'
+
+services:
+  db-master:
+    image: mysql:8.3.0 # Mysql 1.6 버전 이미지 사용
+    container_name: db-master # container 이름 설정
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: song13055523! # container 생성 후 root의 비밀번호를 저장한 파일을 설정함으로서 root 비밀번호를 설정
+      MYSQL_DATABASE: ourstory_dev
+      MYSQL_USER: root
+      MYSQL_PASSWORD: song13055523!
+    volumes:
+      - ./master_db/data:/var/lib/mysql # 각종 log와 index등이 volume이 저장되는 디렉토리
+      - ./master_db/config/:/etc/mysql/conf.d # 이전에 나왔던 ./master/config/my.cnf 를 써줌으로서 설정을 reference 줍니다
+    ports:
+      - "3306:3306" # 이 옵션은 docker engine에게 각 container에게 포트를 수동으로 설정하게 해줍니다.
+
+
+#docker-compose -f /Users/songjeongpyeong/Documents/GitHub/ourstory/docker-compose.yml -p ourstory up -d

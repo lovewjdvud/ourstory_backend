@@ -28,8 +28,9 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-security")
     compileOnly("org.projectlombok:lombok")
-//    runtimeOnly("com.mysql:mysql-connector-j")
+    runtimeOnly("com.mysql:mysql-connector-j")
 
+//    implementation ("mysql:mysql-connector-java:8.0.0")
     implementation ("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.4.0")
 
     implementation ("io.jsonwebtoken:jjwt-api:0.12.3")
