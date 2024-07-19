@@ -39,7 +39,12 @@ public class SecurityConfig {
         //경로별 인가 작업
         http
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/login", "/", "/swagger-ui/**","/v3/api-docs/**","/join").permitAll() // login,/,join으로 접근하는거는 모두 가능해
+                        .requestMatchers(
+                                "/api/login",
+                                "/api/user/join",
+                                "/", "/swagger-ui/**",
+                                "/v3/api-docs/**",
+                                "/join").permitAll() // login,/,join으로 접근하는거는 모두 가능해
                         .requestMatchers("/admin").hasRole("ADMIN") // admin에 접근하는 사람은 ADMIN이라는 권한이 있는 사람만 가능해
                         .anyRequest().authenticated()); // 그 외 나머지는 로그인 한사라만 가능
                          // 예시로 HTTP Basic 인증을 추가

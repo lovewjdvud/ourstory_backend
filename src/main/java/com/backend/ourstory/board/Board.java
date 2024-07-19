@@ -19,7 +19,7 @@ public class Board extends BaseEntity {
     private long id;
 
     @Column(nullable = false)
-    private String tytle;
+    private String title;
     private String content;
     private int comment_count;
     private int like_count;

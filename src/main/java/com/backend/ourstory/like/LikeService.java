@@ -1,10 +1,10 @@
-package com.backend.ourstory.tagtype;
+package com.backend.ourstory.like;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class TagtypeService {
-    private final TagtypeRepository tagtypeRepository;
+public class LikeService {
+    private final LikeRepository likeRepository;
 }

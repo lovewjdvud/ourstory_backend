@@ -11,6 +11,7 @@ public class Tagtype extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    private String type;
+    private String tag_cd;
     private String content;
+
 }
