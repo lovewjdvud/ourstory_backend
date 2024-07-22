@@ -8,7 +8,7 @@ import org.springframework.http.HttpStatus;
 public enum ResponseStatus {
     SUCCESS(20,"success"),
     FAILURE(40,"failure"),
-    SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR,50,"서버에 에러가 발생했습니다.");
+    SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR,50,"server failure");
 
 
     // 로그인 관련

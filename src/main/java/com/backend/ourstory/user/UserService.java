@@ -39,6 +39,14 @@ public class UserService {
     @Transactional(readOnly = false)
     public ApiResult signIn(SignInDto signInDto) {
 
+        Boolean isExist = userRepository.existsByEmail(signInDto.getUsername());
+
+        if (!isExist) {
+            return ApiResult.builder()
+                    .status(ResponseStatus.FAILURE)
+                    .detail_msg("아이디가 존재하지 않습니다")
+                    .build();
+        }
 
         String username = signInDto.getUsername();
         String password = signInDto.getPassword();

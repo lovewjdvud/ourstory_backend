@@ -27,7 +27,7 @@ public class BoardEntity extends BaseEntity {
     private int like_count;
 
     @Column(nullable = false)
-    private String tag_type;
+    private String tagtype;
 
     @Column(nullable = false)
     private long user_id;
