@@ -22,7 +22,20 @@ public class UserController {
     private final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
     @PostMapping("/join") // TODO: headers -> customer_id
     @Operation(summary = "회원가입", description = "회원가입 요청 API")
-    public ResponseEntity<ApiResult> joinProcess(@Valid @RequestBody UserDto userDto)   {
+    public ResponseEntity<ApiResult> join(@Valid @RequestBody UserDto userDto)   {
+        LOGGER.info("회원가입 요청 : email = {}, name = {}", userDto.getEmail(), userDto.getName());
+//        if ("AuthenticationException".equals(id)) {
+//            throw new ApiException(ExceptionEnum.SECURITY);
+//        }
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(userService.userJoin(userDto));
+    }
+
+    @PostMapping("/login") // TODO: headers -> customer_id
+    @Operation(summary = "로그인", description = "로그인 요청 API")
+    public ResponseEntity<ApiResult> login(@Valid @RequestBody UserDto userDto)   {
         LOGGER.info("회원가입 요청 : email = {}, name = {}", userDto.getEmail(), userDto.getName());
 //        if ("AuthenticationException".equals(id)) {
 //            throw new ApiException(ExceptionEnum.SECURITY);

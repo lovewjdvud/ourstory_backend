@@ -10,7 +10,7 @@ import lombok.*;
 @Builder
 @ToString
 @Getter
-public class User extends BaseEntity {
+public class UserEntity extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;

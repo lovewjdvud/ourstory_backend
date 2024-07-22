@@ -2,7 +2,6 @@ package com.backend.ourstory.comment;
 
 import com.backend.ourstory.board.Board;
 import com.backend.ourstory.common.entity.BaseEntity;
-import com.backend.ourstory.user.User;
 import jakarta.persistence.*;
 import lombok.*;
 

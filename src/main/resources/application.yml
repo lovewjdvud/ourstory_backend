@@ -3,5 +3,7 @@ spring:
     active: dev
   autoconfigure:
 
+  jwt:
+    secret: "vmfhaltmskdlstkfkdgodyroqkfwkdbalroqkfwkdbalaaaaaaaaaaaaaaaabbbbb"
 
 

@@ -31,7 +31,7 @@ public class UserService {
                     .build();
         }
 
-        User user = User.builder()
+        UserEntity user = UserEntity.builder()
                 .email(userDto.getEmail())
                 .password(bCryptPasswordEncoder.encode(userDto.getPassword()))
                 .name(userDto.getName())
@@ -41,7 +41,7 @@ public class UserService {
                 .build();
 
         try {
-            User savedUser = userRepository.save(user);
+            UserEntity savedUser = userRepository.save(user);
             logger.info("회원가입 처리 완료: {}", savedUser.getEmail());
 
             return ApiResult.builder()
@@ -58,5 +58,37 @@ public class UserService {
                     .build();
         }
 
+    }
+
+
+    public ApiResult userLogin(UserDto userDto) { // vym = 2023.05
+
+
+        Boolean isExist = userRepository.existsByEmail(userDto.getEmail());
+
+        if (!isExist) {
+            return ApiResult.builder()
+                    .status(ResponseStatus.FAILURE)
+                    .detail_msg("아이디가 존재하지 않습니다.")
+                    .build();
+        }
+
+        try {
+
+            logger.info("로그인 처리 완료: {}");
+
+            return ApiResult.builder()
+                    .status(ResponseStatus.SUCCESS)
+                    .detail_msg("회원가입이 완료되었습니다.")
+
+                    .build();
+
+        } catch (DataAccessException e) {
+            logger.error("로그인 처리 중 오류 발생: {}", e.getMessage(), e);
+            return ApiResult.builder()
+                    .status(ResponseStatus.SERVER_ERROR)
+                    .detail_msg("로그인 처리 중 오류가 발생하였습니다. error: \n " + e.getMessage())
+                    .build();
+        }
     }
 }

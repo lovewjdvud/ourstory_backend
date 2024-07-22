@@ -1,7 +1,7 @@
 package com.backend.ourstory.board;
 
 import com.backend.ourstory.common.entity.BaseEntity;
-import com.backend.ourstory.user.User;
+import com.backend.ourstory.user.UserEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -27,7 +27,7 @@ public class Board extends BaseEntity {
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    private UserEntity user;
 //
 //    @ManyToOne
 //    @JoinColumn(name = "tag_id", nullable = false)
