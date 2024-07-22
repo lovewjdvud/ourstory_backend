@@ -28,7 +28,7 @@ public class UserDto {
     private String nickname;
 
     @NotNull()
-    private int phoneNumber;
+    private String phoneNumber;
 
     @NotBlank(message = "비밀번호는 필수 입력 항목입니다.")
     private String password;
@@ -37,7 +37,7 @@ public class UserDto {
 
 
     @Builder
-    public UserDto(String email, String name, String nickname, int phoneNumber, String password, String profileImageUrl) {
+    public UserDto(String email, String name, String nickname, String phoneNumber, String password, String profileImageUrl) {
         this.email = email;
         this.name = name;
         this.nickname = nickname;

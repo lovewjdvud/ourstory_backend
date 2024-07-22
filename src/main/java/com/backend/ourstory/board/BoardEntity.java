@@ -11,7 +11,7 @@ import lombok.*;
 @Builder
 @ToString
 @Getter
-public class Board extends BaseEntity {
+public class BoardEntity extends BaseEntity {
 
     // @Column(nullable = false)
     @Id
@@ -20,14 +20,21 @@ public class Board extends BaseEntity {
 
     @Column(nullable = false)
     private String title;
+
+    @Column(nullable = false)
     private String content;
     private int comment_count;
     private int like_count;
+
+    @Column(nullable = false)
     private String tag_type;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    private UserEntity user;
+    @Column(nullable = false)
+    private long user_id;
+    @Column(nullable = false)
+    private String user_nickname;
+    @Column(nullable = false)
+    private String user_image_url;
 //
 //    @ManyToOne
 //    @JoinColumn(name = "tag_id", nullable = false)

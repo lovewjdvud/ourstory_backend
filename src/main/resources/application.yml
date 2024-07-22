@@ -4,6 +4,6 @@ spring:
   autoconfigure:
 
   jwt:
-    secret: "vmfhaltmskdlstkfkdgodyroqkfwkdbalroqkfwkdbalaaaaaaaaaaaaaaaabbbbb"
+    secret: "faff2c53fdc2ab14bf332a3e86e4f250f873ee4d994950a559c5bf5f48bf09be"
 
 

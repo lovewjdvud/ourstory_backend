@@ -1,6 +1,6 @@
 package com.backend.ourstory.comment;
 
-import com.backend.ourstory.board.Board;
+import com.backend.ourstory.board.BoardEntity;
 import com.backend.ourstory.common.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
@@ -21,5 +21,5 @@ public class Comment extends BaseEntity {
 
     @ManyToOne
     @JoinColumn(name = "user_nickName", nullable = false)
-    private Board board;
+    private BoardEntity board;
 }
