@@ -2,9 +2,12 @@ package com.backend.ourstory.board;
 
 import com.backend.ourstory.board.dto.request.BoardAddDto;
 import com.backend.ourstory.common.dto.ApiResult;
+import com.backend.ourstory.common.dto.ExceptionEnum;
 import com.backend.ourstory.common.dto.ResponseStatus;
+import com.backend.ourstory.common.exception.ApiException;
 import com.backend.ourstory.common.util.SecurityUtil;
 import com.backend.ourstory.user.UserEntity;
+import com.backend.ourstory.user.UserRepository;
 import com.backend.ourstory.user.UserService;
 import com.backend.ourstory.user.dto.Request.SignInDto;
 import lombok.RequiredArgsConstructor;
@@ -12,17 +15,20 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
-
+import java.util.Optional;
 import java.util.List;
+
 
 @Service
 @RequiredArgsConstructor
 public class BoardService {
 
     private final BoardRepository boardRepository;
+    private final UserRepository userRepository;
 
     private static final Logger logger = LoggerFactory.getLogger(BoardService.class);
 
+    // 게시글 리스트
     public ApiResult getboardList(String tagType) {
         try {
             List<BoardEntity> boardList = boardRepository.findByTagtype(tagType);
@@ -37,13 +43,13 @@ public class BoardService {
             logger.error("게시글 리스트를 불러오는 중 오류 발생: {}", e.getMessage(), e);
             return ApiResult.builder()
                     .status(ResponseStatus.SERVER_ERROR)
-                    .detail_msg("게시글 리스트를 불러오는 오류가 발생하였습니다. error: \n " + e.getMessage())
+                    .detail_msg("게시글 리스트를 불러오는 중 오류가 발생하였습니다. error: \n " + e.getMessage())
                     .build();
         }
     }
 
     // 게시물 생성
-    public ApiResult boardAdd(BoardAddDto boardAddDto) {
+    public ApiResult addBoard(BoardAddDto boardAddDto) {
 
         BoardEntity.BoardEntityBuilder builder = BoardEntity.builder();
         builder.title(boardAddDto.getTitle());
@@ -75,6 +81,69 @@ public class BoardService {
         }
     }
 
+
+    // 게시글 상세보기
+    public ApiResult detailBoard(int boardId) {
+
+        try {
+
+            BoardEntity boardList = boardRepository.findById(boardId);
+            logger.info("Service 게시글 상세보기 count ");
+
+            return ApiResult.builder()
+                    .status(ResponseStatus.SUCCESS)
+                    .data(boardList)
+                    .build();
+
+        } catch (DataAccessException e) {
+            logger.error("게시글 상세보기 불러오는 중 오류 발생: {}", e.getMessage(), e);
+            return ApiResult.builder()
+                    .status(ResponseStatus.SERVER_ERROR)
+                    .detail_msg("게시글 상세보기 불러오는 중 오류가 발생하였습니다. error: \n " + e.getMessage())
+                    .build();
+        }
+    }
+
+    // 게시글 삭제하기
+    public ApiResult deleteBoard(int boardId) {
+
+        try {
+            String userEmail = SecurityUtil.getCurrentUsername();
+            Optional<UserEntity> userEntity = userRepository.findUserByEmail(userEmail);
+
+            BoardEntity board = boardRepository.findById(boardId);
+//                    .orElseThrow(() -> new ApiException(ExceptionEnum.SECURITY));
+            boardRepository.delete(board);
+
+
+//                    new ApiException(ExceptionEnum.SECURITY));
+//            if (board.) {
+////                throw new ApiException(ExceptionEnum.SECURITY);
+//            }
+            if (board.getUser_id() != (int) userEntity.get().getId()) {
+                return ApiResult.builder()
+                        .status(ResponseStatus.FAILURE)
+                        .detail_msg("해당 게시물은 작성자만 삭제 가능합니다 board user id " + board.getUser_id() + "user" + userEntity.get().getId())
+                        .build();
+            }
+
+            boardRepository.deleteById((long) boardId);
+
+            logger.info("Service 게시글 상세보기 user Email {} ",userEmail);
+
+            return ApiResult.builder()
+                    .status(ResponseStatus.SUCCESS)
+                    .detail_msg("삭제가 완료 되었습니다.")
+                    .build();
+
+        } catch (DataAccessException e) {
+            logger.error("게시글 상세보기 불러오는 중 오류 발생: {}", e.getMessage(), e);
+            return ApiResult.builder()
+                    .status(ResponseStatus.SERVER_ERROR)
+                    .detail_msg("게시글 상세보기 불러오는 중 오류가 발생하였습니다. error: \n " + e.getMessage())
+                    .build();
+        }
+    }
 
 
 }

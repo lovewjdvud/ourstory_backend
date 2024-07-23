@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -35,7 +36,26 @@ public class BoardController {
     public  ResponseEntity<ApiResult> addBoard(@RequestBody BoardAddDto boardAddDto) {
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(boardService.boardAdd(boardAddDto));
+                .body(boardService.addBoard(boardAddDto));
     }
+
+    @GetMapping("/detail") // TODO: headers -> customer_id
+    @Operation(summary = "게시글 상세보기", description = "게시글 상세보기 API")
+    public  ResponseEntity<ApiResult> detailBoard(@RequestParam @NonNull int boardId) {
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(boardService.detailBoard(boardId));
+    }
+
+
+    @DeleteMapping("/delete") // TODO: headers -> customer_id
+    @Operation(summary = "게시글 삭제하기", description = "게시글 삭제하기 API")
+    public  ResponseEntity<ApiResult> deleteBoard(@RequestParam @NonNull int boardId) {
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(boardService.deleteBoard(boardId));
+    }
+
+    // DetailBoard
 
 }
