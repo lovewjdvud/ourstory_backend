@@ -32,20 +32,20 @@ public class CommentController {
                 .body(commentService.addComment(commentAddDto));
     }
 
-    @GetMapping(value="/delete")
+    @DeleteMapping(value="/delete")
     @Operation(summary = "댓글 삭제", description = "댓글 삭제 API")
-    public ResponseEntity<ApiResult> deleteComment(@RequestParam("board_id") @NonNull long board_id) {
+    public ResponseEntity<ApiResult> deleteComment(@RequestParam("board_id") @NonNull int board_id,@RequestParam("comment_id") @NonNull int comment_id) {
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(commentService.getCommentList(board_id));
+                .body(commentService.deleteComment(board_id,comment_id));
     }
 
-    @PatchMapping(value="/update")
+    @PatchMapping(value="/update/{comment_id}")
     @Operation(summary = "댓글 수정", description = "댓글 수정 API")
-    public ResponseEntity<ApiResult> updateComment(@RequestBody CommentAddDto commentAddDto) {
+    public ResponseEntity<ApiResult> updateComment(@RequestBody CommentAddDto commentAddDto,@PathVariable int comment_id) {
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(commentService.addComment(commentAddDto));
+                .body(commentService.updateComment(commentAddDto,comment_id));
     }
 
     @GetMapping(value="/list")

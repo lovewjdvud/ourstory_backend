@@ -52,8 +52,10 @@ public class CommentService {
 
 
         try {
-            Comment savedBoarder  = commentRepository.save(comment);
+            // 댓글 생성
+            Comment savedComment  = commentRepository.save(comment);
 
+            // 댓글 생성 후 총 카운트 가져오기
             int commentCount = commentRepository.countByBoardId(commentAddDto.getBoardId());
 
             // 해당 게시들 댓글 카운트 업데이트
@@ -81,25 +83,74 @@ public class CommentService {
     }
 
     // 댓글 삭제
-    public ApiResult deleteComment(long board_id) {
+    @Transactional
+    public ApiResult deleteComment(long board_id,int comment_id) {
 
-        List<Optional<Comment>> userEntity = commentRepository.findCommentByBoardId(board_id);
+        UserEntity userEntity = userRepository.findByEmail(SecurityUtil.getCurrentUsername());
 
-        return ApiResult.builder()
-                .status(ResponseStatus.SUCCESS)
-                .data(userEntity)
-                .build();
+
+        try {
+            // 댓글 삭제
+            commentRepository.deleteById(comment_id);
+
+            logger.info("1 댓글 삭제 처리 완료 ");
+            // 댓글 삭제 후 총 카운트 가져오기
+            int commentCount = commentRepository.countByBoardId(board_id);
+            logger.info("2 댓글 삭제 처리 완료 ");
+            // 해당 게시들 댓글 카운트 업데이트
+            int boardEntity = boardRepository.updateCommentCountById(board_id,commentCount);
+            logger.info("3 댓글 삭제 처리 완료 ");
+            BoardEntity boardEntyti = boardRepository.findById(board_id)
+                    .orElseThrow(() ->
+                            new ApiException(ExceptionEnum.SEARCH_DATA_NULL_ERROR)
+                    );
+
+            logger.info("4 댓글 삭제 처리 완료: {}  총카운트 : {} ,board 카운트 : {} ", boardEntity,boardEntyti.getComment_count());
+
+            return ApiResult.builder()
+                    .status(ResponseStatus.SUCCESS)
+                    .detail_msg("댓글 삭제 완료되었습니다.")
+                    .build();
+
+        } catch (DataAccessException e) {
+            logger.error("댓글 삭제 중 오류 발생: {}", e.getMessage(), e);
+            return ApiResult.builder()
+                    .status(ResponseStatus.SERVER_ERROR)
+                    .detail_msg("댓글 삭제 중 오류가 발생하였습니다. error: \n " + e.getMessage())
+                    .build();
+        }
     }
-
+    @Transactional
     // 댓글 수정
-    public ApiResult updateComment(long board_id) {
+    public ApiResult updateComment(CommentAddDto commentAddDto,int comment_id) {
 
-        List<Optional<Comment>> userEntity = commentRepository.findCommentByBoardId(board_id);
+        UserEntity userEntity = userRepository.findByEmail(SecurityUtil.getCurrentUsername());
 
-        return ApiResult.builder()
-                .status(ResponseStatus.SUCCESS)
-                .data(userEntity)
+        Comment.CommentBuilder builder = Comment.builder();
+        builder.content(commentAddDto.getContent());
+        builder.boardId(commentAddDto.getBoardId());
+        builder.user_id(userEntity.getId());
+        builder.user_nick_name(userEntity.getNickname());
+        builder.user_image_url(userEntity.getProfileImageUrl());
+
+        Comment comment = builder
                 .build();
+
+        try {
+            int updateComment  = commentRepository.updateCommentById(comment,comment_id);
+
+            return ApiResult.builder()
+                    .status(ResponseStatus.SUCCESS)
+                    .detail_msg("댓글 수정 완료되었습니다.")
+                    .build();
+
+        } catch (DataAccessException e) {
+            logger.error("댓글 수정 중 오류 발생: {}", e.getMessage(), e);
+            return ApiResult.builder()
+                    .status(ResponseStatus.SERVER_ERROR)
+                    .detail_msg("댓글 수정 중 오류가 발생하였습니다. error: \n " + e.getMessage())
+                    .build();
+        }
     }
 
     // 댓글 리스트
