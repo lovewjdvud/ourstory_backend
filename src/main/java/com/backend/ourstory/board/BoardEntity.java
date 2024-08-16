@@ -4,6 +4,7 @@ import com.backend.ourstory.common.entity.BaseEntity;
 import com.backend.ourstory.user.UserEntity;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.DynamicUpdate;
 
 @Entity
 @AllArgsConstructor
@@ -11,6 +12,7 @@ import lombok.*;
 @Builder
 @ToString
 @Getter
+@DynamicUpdate
 public class BoardEntity extends BaseEntity {
 
     // @Column(nullable = false)
@@ -32,7 +34,7 @@ public class BoardEntity extends BaseEntity {
     @Column(nullable = false)
     private long user_id;
     @Column(nullable = false)
-    private String user_nickname;
+    private String user_nick_name;
     @Column(nullable = false)
     private String user_image_url;
 //

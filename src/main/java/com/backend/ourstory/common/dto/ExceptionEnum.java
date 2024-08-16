@@ -13,8 +13,11 @@ public enum ExceptionEnum {
     ACCESS_DENIED_EXCEPTION(HttpStatus.UNAUTHORIZED, "E0002"),
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "E0003"),
 
+
     // Custom Exception
-    SECURITY(HttpStatus.UNAUTHORIZED, "CE0001", "로그인이 필요합니다");
+    SECURITY(HttpStatus.UNAUTHORIZED, "CE0001", "로그인이 필요합니다"),
+    SEARCH_DATA_NULL_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "50","조회하신 데이터는 존재하지 않습니다");
+
 
     private final HttpStatus status;
     private final String code;

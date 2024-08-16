@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import java.util.Optional;
 import java.util.List;
@@ -56,7 +57,7 @@ public class BoardService {
         builder.content(boardAddDto.getContent());
         builder.tagtype(boardAddDto.getTag_type());
         builder.user_id(boardAddDto.getUser_id());
-        builder.user_nickname(boardAddDto.getUser_nickname());
+        builder.user_nick_name(boardAddDto.getUser_nickname());
         builder.user_image_url(boardAddDto.getUser_profile_image());
 
         BoardEntity board = builder
@@ -87,8 +88,11 @@ public class BoardService {
 
         try {
 
-            BoardEntity boardList = boardRepository.findById(boardId);
-            logger.info("Service 게시글 상세보기 count ");
+            BoardEntity boardList = boardRepository.findById(boardId)
+                 .orElseThrow(() ->
+                        new ApiException(ExceptionEnum.SEARCH_DATA_NULL_ERROR)
+                );
+
 
             return ApiResult.builder()
                     .status(ResponseStatus.SUCCESS)
@@ -111,15 +115,13 @@ public class BoardService {
             String userEmail = SecurityUtil.getCurrentUsername();
             Optional<UserEntity> userEntity = userRepository.findUserByEmail(userEmail);
 
-            BoardEntity board = boardRepository.findById(boardId);
-//                    .orElseThrow(() -> new ApiException(ExceptionEnum.SECURITY));
+            BoardEntity board = boardRepository.findById(boardId)
+                    .orElseThrow(() ->
+                            new ApiException(ExceptionEnum.SEARCH_DATA_NULL_ERROR)
+                    );
+
             boardRepository.delete(board);
 
-
-//                    new ApiException(ExceptionEnum.SECURITY));
-//            if (board.) {
-////                throw new ApiException(ExceptionEnum.SECURITY);
-//            }
             if (board.getUser_id() != (int) userEntity.get().getId()) {
                 return ApiResult.builder()
                         .status(ResponseStatus.FAILURE)
@@ -128,8 +130,6 @@ public class BoardService {
             }
 
             boardRepository.deleteById((long) boardId);
-
-            logger.info("Service 게시글 상세보기 user Email {} ",userEmail);
 
             return ApiResult.builder()
                     .status(ResponseStatus.SUCCESS)

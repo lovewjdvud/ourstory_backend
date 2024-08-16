@@ -35,6 +35,18 @@ public class ApiExceptionAdvice {
                         .build());
     }
 
+    @ExceptionHandler({DuplicateException.class})
+    public ResponseEntity<ApiResult> exceptionHandler(DuplicateException ex) {
+
+        return ResponseEntity
+                .status(ExceptionEnum.RUNTIME_EXCEPTION.getStatus())
+                .body(ApiResult.builder()
+                        .status(ex.getResponseStatus())
+                        .detail_msg(ex.getCustomMessage())
+                        .build());
+    }
+
+    // 중복 시 예외처리
     @ExceptionHandler({RuntimeException.class})
     public ResponseEntity<ApiResult> exceptionHandler(HttpServletRequest request, final RuntimeException e) {
 

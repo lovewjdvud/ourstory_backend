@@ -21,6 +21,7 @@ import java.util.stream.Collectors;
 @Builder
 @ToString
 @Getter
+@Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @EqualsAndHashCode(of = "id")
 @EntityListeners(AuditingEntityListener.class)
@@ -37,13 +38,13 @@ public class UserEntity implements UserDetails {
     @Column(nullable = false,unique = true)
     private String nickname;
 
-    @Column(nullable = false)
-    private String phone_number;
+    @Column(nullable = false,unique = true)
+    private String phoneNumber;
 
     @Column(nullable = false)
     private String password;
 
-    private String profile_image_url;
+    private String profileImageUrl;
 
     @CreatedDate
     @Column(updatable = false)

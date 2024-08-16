@@ -6,6 +6,11 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+@ToString
+@Getter
 public class Tagtype extends BaseEntity {
 
     @Id

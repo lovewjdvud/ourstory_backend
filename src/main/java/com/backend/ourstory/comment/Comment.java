@@ -17,9 +17,16 @@ public class Comment extends BaseEntity {
     private long id;
 
     @Column(nullable = false)
+    private long boardId;
+
+    @Column(nullable = false)
     private String content;
 
-    @ManyToOne
-    @JoinColumn(name = "user_nickName", nullable = false)
-    private BoardEntity board;
+    @Column(nullable = false)
+    private long user_id;
+    @Column(nullable = false)
+    private String user_nick_name;
+    @Column(nullable = false)
+    private String user_image_url;
+
 }

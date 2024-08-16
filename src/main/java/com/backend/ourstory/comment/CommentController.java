@@ -1,10 +1,17 @@
 package com.backend.ourstory.comment;
 
+import com.backend.ourstory.board.dto.request.BoardAddDto;
+import com.backend.ourstory.comment.dto.request.CommentAddDto;
+import com.backend.ourstory.common.dto.ApiResult;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 
@@ -15,19 +22,39 @@ import java.time.LocalDateTime;
 public class CommentController {
     private final CommentService commentService;
 
-    @GetMapping("/") // TODO: headers -> customer_id
-    @Operation(summary = "업체 회원가입", description = "업체 측에서 회원가입 할 때 사용하는 API")
 
-    public String getAccount() {
-        return  "sss";
-        //return ResponseEntity.status(HttpStatus.OK).body(accountService.getAccount(customerId));
+    @PostMapping(value="/add")
+    @Operation(summary = "댓글 생성", description = "댓글 생성 API")
+    public ResponseEntity<ApiResult>
+    getCommentList(@RequestBody CommentAddDto commentAddDto) {
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(commentService.addComment(commentAddDto));
     }
-//
-//    @GetMapping("/{accountNumber}/detail")
-//    public ResponseEntity<SpecificAccount> getAccountDetail(@PathVariable String accountNumber,
-//                                                            @RequestParam long customerId,
-//                                                            @RequestParam LocalDateTime viewYearMonth) {
-//        // TODO: customerId 검증
-//        return  ResponseEntity.ok(commentService.getAccountDetail(accountNumber,viewYearMonth));
-//    }
+
+    @GetMapping(value="/delete")
+    @Operation(summary = "댓글 삭제", description = "댓글 삭제 API")
+    public ResponseEntity<ApiResult> deleteComment(@RequestParam("board_id") @NonNull long board_id) {
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(commentService.getCommentList(board_id));
+    }
+
+    @PatchMapping(value="/update")
+    @Operation(summary = "댓글 수정", description = "댓글 수정 API")
+    public ResponseEntity<ApiResult> updateComment(@RequestBody CommentAddDto commentAddDto) {
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(commentService.addComment(commentAddDto));
+    }
+
+    @GetMapping(value="/list")
+    @Operation(summary = "댓글 리스트", description = "댓글 리스트 API")
+    public ResponseEntity<ApiResult> getCommentList(@RequestParam("board_id") @NonNull long board_id) {
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(commentService.getCommentList(board_id));
+    }
+
+
 }

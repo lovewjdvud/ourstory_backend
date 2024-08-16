@@ -20,7 +20,7 @@ spring:
         format_sql: true
         dialect: org.hibernate.dialect.MySQLDialect
 
-
+# mkdir -p src/main/resources/upload-dir
 server:
   port: 8001
   servlet:
@@ -35,3 +35,8 @@ logging:
     org.springframework: error
     studio.ourstory: info
 #    org.springframework.security: DEBUG
+
+file:
+  rootDir: /Users/songjeongpyeong/Documents/GitHub/ourstory
+  uploadDir: src/main/resources/upload-dir
+  profileImageDir: src/main/resources/upload-dir/profileimage

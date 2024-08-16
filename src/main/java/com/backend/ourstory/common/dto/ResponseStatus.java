@@ -5,6 +5,7 @@ import lombok.Setter;
 import org.springframework.http.HttpStatus;
 
 @Getter
+
 public enum ResponseStatus {
     SUCCESS(20,"success"),
     FAILURE(40,"failure"),
