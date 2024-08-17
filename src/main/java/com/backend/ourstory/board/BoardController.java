@@ -56,6 +56,22 @@ public class BoardController {
                 .body(boardService.deleteBoard(boardId));
     }
 
+    @PostMapping("/like") // TODO: headers -> customer_id
+    @Operation(summary = "게시글 좋아요 생성", description = "게시글 좋아요 생성 API")
+    public  ResponseEntity<ApiResult> likeBoard(@RequestParam @NonNull int boardId) {
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(boardService.deleteBoard(boardId));
+    }
+
+    @DeleteMapping("/like/delete") // TODO: headers -> customer_id
+    @Operation(summary = "게시글 좋아요 삭제하기", description = "게시글 좋아요 삭제하기 API")
+    public  ResponseEntity<ApiResult> likeDeleteBoard(@RequestParam @NonNull int boardId) {
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(boardService.deleteBoard(boardId));
+    }
+
     // DetailBoard
 
 }

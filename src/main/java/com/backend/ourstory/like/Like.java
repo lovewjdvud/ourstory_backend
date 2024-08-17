@@ -20,7 +20,9 @@ public class Like {
     private long b_id;
 
     @Column(nullable = false)
+    private long user_id;
+
+    @Column(nullable = false)
     private String user_nickName;
 
-    private String is_like;
 }
