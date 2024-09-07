@@ -8,7 +8,16 @@ import org.springframework.http.HttpStatus;
 
 public enum ResponseStatus {
     SUCCESS(20,"success"),
+
     FAILURE(40,"failure"),
+
+    // 41# - 로그인 관련
+    SIGNIN_ID_NOT_EXISIT_FAILURE(411,"failure"), // 아이디가 존재하지 않음
+
+    // 42# - 회원가입 관련
+    FAILURE_SIGN_IN_EXIST(421,"failure"),       // 이미 존재함
+
+
     SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR,50,"server failure");
 
 

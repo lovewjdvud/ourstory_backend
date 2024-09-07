@@ -17,7 +17,7 @@ public class Like {
     private long id; // 기본 키 필드 이름을 일반적으로 id로 설정
 
     @Column(nullable = false)
-    private long b_id;
+    private long bId;
 
     @Column(nullable = false)
     private long user_id;

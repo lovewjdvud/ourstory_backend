@@ -51,7 +51,9 @@ public class SecurityConfig {
                         .requestMatchers(
                                  "/api/user/sign-in",
                                 "/api/user/join",
-                                "/", "/swagger-ui/**",
+                                "/api/user/test",
+                                "/",
+                                "/swagger-ui/**",
                                 "/v3/api-docs/**",
                                 "/join").permitAll() // login,/,join으로 접근하는거는 모두 가능해
                         .requestMatchers("/admin").hasRole("ADMIN") // admin에 접근하는 사람은 ADMIN이라는 권한이 있는 사람만 가능해

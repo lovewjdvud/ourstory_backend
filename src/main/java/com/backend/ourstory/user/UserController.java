@@ -44,13 +44,18 @@ public class UserController {
 
     @PostMapping("/sign-in") // TODO: headers -> customer_id
     @Operation(summary = "로그인", description = "로그인 요청 API")
-    public ResponseEntity<ApiResult> login(@Valid @RequestBody SignInDto signInDto)   {
+    public ResponseEntity<ApiResult> login(@RequestBody SignInDto signInDto)   {
         LOGGER.info("로그인 요청 : Contoller ");
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(userService.signIn(signInDto));
     }
-
+    @PostMapping("/test")
+    public ResponseEntity<ApiResult> test(@RequestBody SignInDto signInDto) {
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(userService.test());
+    }
     @GetMapping("/info/{user_id}") // TODO: headers -> customer_id
     @Operation(summary = "유저 프로필 정보", description = "유저 프로필 정보 API")
     public ResponseEntity<ApiResult> userProfileInfo(@PathVariable int user_id)   {
@@ -95,11 +100,5 @@ public class UserController {
 //    @PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 //    public ResponseEntity<UploadSavedDTO> upload(@Valid @FilesParameter UploadFileDTO uploadFileDTO)
 
-
-
-    @PostMapping("/test")
-    public String test() {
-        return SecurityUtil.getCurrentUsername(); // 어떤 회원이 API를 요청했는지 쉽게 조회할 수 있는 클래스
-    }
 
 }

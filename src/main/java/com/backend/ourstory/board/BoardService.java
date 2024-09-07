@@ -160,7 +160,7 @@ public class BoardService {
 
 
             Like.LikeBuilder builder = Like.builder();
-            builder.b_id(boardId);
+            builder.bId(boardId);
             builder.user_id(userEntity.getId());
             builder.user_nickName(userEntity.getNickname());
 
@@ -171,7 +171,7 @@ public class BoardService {
             likeRepository.save(like);
 
             // 해당 게시물 총 좋아요 카운트 가져오기
-            int likeCount = likeRepository.countByB_id(boardId);
+            int likeCount = likeRepository.countByBId(boardId);
 
             // 해당 게시물 좋아요 카운트 업데이트
             int boardEntity = boardRepository.updateCommentCountById(boardId,likeCount);
@@ -195,7 +195,7 @@ public class BoardService {
         try {
             UserEntity userEntity = userRepository.findByEmail(SecurityUtil.getCurrentUsername());
 
-            likeRepository.deleteBy
+//            likeRepository.deleteBy
 
             BoardEntity boardList = boardRepository.findById(boardId)
                     .orElseThrow(() ->

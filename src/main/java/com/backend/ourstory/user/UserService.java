@@ -61,36 +61,56 @@ public class UserService {
 //        this.profileImageLocation = Paths.get(fileStorageProperties.getProfileImageDir());
 //    }
 
+    // 사진 삭제
+    public ApiResult test() {
+
+        return ApiResult.builder()
+                .status(ResponseStatus.SUCCESS)
+                .detail_msg("test 완료 되었습니다")
+                .build();
+    }
+
     @Transactional(readOnly = false)
     public ApiResult signIn(SignInDto signInDto) {
-
-        Boolean isExist = userRepository.existsByEmail(signInDto.getUsername());
-
+        System.out.println("UserService signIn signInDto.getUsername() " + signInDto.getEmail());
+        Boolean isExist = userRepository.existsByEmail(signInDto.getEmail());
+        System.out.println("UserService signIn exist " + isExist);
+//        Boolean isExist = userRepository.existsByPassword(signInDto.getPassword());
         if (!isExist) {
             return ApiResult.builder()
-                    .status(ResponseStatus.FAILURE)
+                    .status(ResponseStatus.SIGNIN_ID_NOT_EXISIT_FAILURE)
                     .detail_msg("아이디가 존재하지 않습니다")
                     .build();
         }
 
-        String username = signInDto.getUsername();
-        String password = signInDto.getPassword();
+        String username = signInDto.getEmail();
+        String password = userRepository.findPasswordByEmail(username);
 
         // 1. username + password 를 기반으로 Authentication 객체 생성
         // 이때 authentication 은 인증 여부를 확인하는 authenticated 값이 false
-        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(username, password);
+        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(username, username);
 
         // 2. 실제 검증. authenticate() 메서드를 통해 요청된 Member 에 대한 검증 진행
         // authenticate 메서드가 실행될 때 CustomUserDetailsService 에서 만든 loadUserByUsername 메서드 실행
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
-
+         Optional<UserEntity> userEntity = userRepository.findUserByEmail(username);
         // 3. 인증 정보를 기반으로 JWT 토큰 생성
         JwtToken jwtToken = jwtTokenProvider.generateToken(authentication);
 
+        Map<String, Object> responseData = new HashMap<>();
+        responseData.put("user_id", userEntity.get().getId());
+        responseData.put("email",userEntity.get().getEmail().toString());
+        responseData.put("name",userEntity.get().getUsername().toString());
+        responseData.put("accessToken",jwtToken.getAccessToken());
+        responseData.put("refreshToken",jwtToken.getRefreshToken());
+//
+
+
+
         return ApiResult.builder()
                 .status(ResponseStatus.SUCCESS)
-                .detail_msg("로근인이 완료되었습니다.")
-                .data(jwtToken)
+                .detail_msg("로rm인이 완료되었습니다.")
+                .data(responseData)
                 .build();
     }
 
@@ -100,10 +120,10 @@ public class UserService {
 //        BCryptPasswordEncoder bCryptPasswordEncoder;
 //        Path test = Paths.get(FileStorageProperties.getProfileImageDir());
         Boolean isExist = userRepository.existsByEmail(userDto.getEmail());
-
+        System.out.println("userJoin " + isExist);
         if (userRepository.existsByEmail(userDto.getEmail())) {
             return ApiResult.builder()
-                    .status(ResponseStatus.FAILURE)
+                    .status(ResponseStatus.FAILURE_SIGN_IN_EXIST)
                     .detail_msg("이미 가입된 아이디가 존재합니다")
                     .build();
         }
@@ -111,7 +131,7 @@ public class UserService {
         // 닉네임 중복 확인
         if (userRepository.existsByNickname(userDto.getNickname())) {
             return ApiResult.builder()
-                    .status(ResponseStatus.FAILURE)
+                    .status(ResponseStatus.FAILURE_SIGN_IN_EXIST)
                     .detail_msg("중복된 닉네임이 존재합니다")
                     .build();
         }
@@ -119,7 +139,7 @@ public class UserService {
         // 핸드폰 번호 중복 확인
         if (userRepository.existsByPhoneNumber(userDto.getPhoneNumber())) {
             return ApiResult.builder()
-                    .status(ResponseStatus.FAILURE)
+                    .status(ResponseStatus.FAILURE_SIGN_IN_EXIST)
                     .detail_msg("이미 가입된 번호가 있습니다")
                     .build();
         }
@@ -129,11 +149,16 @@ public class UserService {
 
         UserEntity.UserEntityBuilder builder = UserEntity.builder();
         builder.email(userDto.getEmail());
-        builder.password(passwordEncoder.encode(userDto.getPassword()));
+
+//        if (userDto.getPassword() != null) {
+            builder.password(passwordEncoder.encode(userDto.getEmail()));
+//        }
+
         builder.name(userDto.getName());
         builder.nickname(userDto.getNickname());
         builder.phoneNumber(userDto.getPhoneNumber());
         builder.profileImageUrl(userDto.getProfileImageUrl());
+        builder.snsType(userDto.getSnsType());
         builder.roles(roles);
         UserEntity user = builder
                 .build();
@@ -142,10 +167,17 @@ public class UserService {
             UserEntity savedUser = userRepository.save(user);
             logger.info("회원가입 처리 완료: {}", savedUser.getEmail());
 
+            Map<String, Object> responseData = new HashMap<>();
+
+            responseData.put("user_id", savedUser.getId());
+            responseData.put("email", savedUser.getEmail().toString());
+            responseData.put("name", savedUser.getName().toString());
+
+
             return ApiResult.builder()
                     .status(ResponseStatus.SUCCESS)
                     .detail_msg("회원가입이 완료되었습니다.")
-                    .data(savedUser.getEmail())
+                    .data(responseData)
                     .build();
 
         } catch (DataAccessException e) {
